@@ -1,16 +1,20 @@
-package com.foxminded.vitaliifedan.task4;
+package com.foxminded.vitaliifedan.task4.formatters;
+
+import com.foxminded.vitaliifedan.task4.models.Division;
+import com.foxminded.vitaliifedan.task4.models.Result;
 
 public class ClassicFormatter implements Formatter {
 
     @Override
     public String format(Result result) {
 
-        if (result.getReminder() == 1) {
+        if (result.getDividend() < result.getDivisor()) {
             return "" + result.getDividend() + " / " + result.getDivisor() + " = " + result.getQuotient();
         }
 
         Division division = new Division();
         StringBuilder stringResult = division.makeDivision(result.getDividend(), result.getDivisor());
+
         int[] index = new int[3];
         int j = 0;
         for (int i = 0; i < stringResult.length(); i++) {
