@@ -1,9 +1,18 @@
-package com.foxminded.vitaliifedan.task4;
+package com.foxminded.vitaliifedan.task4.models;
 
 public class Division {
 
     private final StringBuilder result = new StringBuilder();
     private final StringBuilder reminder = new StringBuilder();
+    private final StringBuilder quotient = new StringBuilder();
+
+    public StringBuilder getReminder() {
+        return reminder;
+    }
+
+    public StringBuilder getQuotient() {
+        return quotient;
+    }
 
     public StringBuilder makeDivision(int dividend, int divisor) {
 
@@ -27,6 +36,7 @@ public class Division {
                 result.append(subtrahend).append("\n");
                 int countOfIndents = lastReminder.length() - calculateDigits(subtractedNumber);
                 result.append(makeDivider(reminderNumber, countOfIndents)).append("\n");
+                quotient.append(reminderNumber / divisor);
                 reminder.replace(0, reminder.length(), String.valueOf(reminderOfDivision));
                 reminderNumber = Integer.parseInt(reminder.toString());
 
