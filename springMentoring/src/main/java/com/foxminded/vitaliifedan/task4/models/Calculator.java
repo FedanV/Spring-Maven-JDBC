@@ -1,4 +1,4 @@
-package com.foxminded.vitaliifedan.task4;
+package com.foxminded.vitaliifedan.task4.models;
 
 public class Calculator {
 
@@ -11,11 +11,15 @@ public class Calculator {
         dividend = Math.abs(dividend);
         divisor = Math.abs(divisor);
 
-        int reminder = 0;
-        int quotient = dividend / divisor;
         if (dividend < divisor) {
             return new Result(dividend, divisor, 0, 1);
         }
+
+        Division division = new Division();
+        division.makeDivision(dividend, divisor);
+
+        int reminder = Integer.parseInt(division.getReminder().toString());
+        int quotient = Integer.parseInt(division.getQuotient().toString());
 
         return new Result(dividend, divisor, quotient, reminder);
 
