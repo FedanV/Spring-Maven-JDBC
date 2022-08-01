@@ -1,4 +1,9 @@
-package com.foxminded.vitaliifedan.task4;
+package com.foxminded.vitaliifedan.task4.factories;
+
+import com.foxminded.vitaliifedan.task4.formatters.Formatter;
+import com.foxminded.vitaliifedan.task4.suppliers.ClassicFormatterSupplier;
+import com.foxminded.vitaliifedan.task4.suppliers.FormatterSupplier;
+import com.foxminded.vitaliifedan.task4.suppliers.GermanFormatterSupplier;
 
 import java.util.HashMap;
 import java.util.Map;
