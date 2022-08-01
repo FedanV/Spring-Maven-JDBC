@@ -1,4 +1,6 @@
-package com.foxminded.vitaliifedan.task4;
+package com.foxminded.vitaliifedan.task4.models;
+
+import java.util.Objects;
 
 public class Result {
 
@@ -38,5 +40,18 @@ public class Result {
                 ", quotient=" + quotient +
                 ", reminder=" + reminder +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result result = (Result) o;
+        return dividend == result.dividend && divisor == result.divisor && quotient == result.quotient && reminder == result.reminder;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dividend, divisor, quotient, reminder);
     }
 }
