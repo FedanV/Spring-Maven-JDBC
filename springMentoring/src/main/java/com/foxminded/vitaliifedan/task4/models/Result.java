@@ -1,5 +1,6 @@
 package com.foxminded.vitaliifedan.task4.models;
 
+import java.util.List;
 import java.util.Objects;
 
 public class Result {
@@ -9,11 +10,18 @@ public class Result {
     private final int quotient;
     private final int reminder;
 
-    public Result(int dividend, int divisor, int quotient, int reminder) {
+    private final List<Step> steps;
+
+    public Result(int dividend, int divisor, int quotient, int reminder, List<Step> steps) {
         this.dividend = dividend;
         this.divisor = divisor;
         this.quotient = quotient;
         this.reminder = reminder;
+        this.steps = steps;
+    }
+
+    public List<Step> getSteps() {
+        return steps;
     }
 
     public int getDividend() {
@@ -47,11 +55,11 @@ public class Result {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Result result = (Result) o;
-        return dividend == result.dividend && divisor == result.divisor && quotient == result.quotient && reminder == result.reminder;
+        return dividend == result.dividend && divisor == result.divisor && quotient == result.quotient && reminder == result.reminder && Objects.equals(steps, result.steps);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(dividend, divisor, quotient, reminder);
+        return Objects.hash(dividend, divisor, quotient, reminder, steps);
     }
 }
