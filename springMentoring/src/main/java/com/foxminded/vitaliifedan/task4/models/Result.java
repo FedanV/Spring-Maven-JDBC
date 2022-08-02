@@ -47,6 +47,7 @@ public class Result {
                 ", divisor=" + divisor +
                 ", quotient=" + quotient +
                 ", reminder=" + reminder +
+                ", steps=" + steps +
                 '}';
     }
 
