@@ -1,5 +1,7 @@
 package com.foxminded.vitaliifedan.task4.models;
 
+import java.util.Objects;
+
 public class Step {
     private final int minuend;
     private final int subtrahend;
@@ -37,5 +39,19 @@ public class Step {
 
     public int getStepQuotient() {
         return stepQuotient;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Step step = (Step) o;
+        return minuend == step.minuend && subtrahend == step.subtrahend && difference == step.difference && stepQuotient == step.stepQuotient;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(minuend, subtrahend, difference, stepQuotient);
     }
 }
