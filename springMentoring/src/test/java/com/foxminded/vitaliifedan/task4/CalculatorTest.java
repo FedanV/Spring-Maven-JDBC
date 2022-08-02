@@ -27,14 +27,14 @@ class CalculatorTest {
     }
 
     @Test
-    void Should_ResultWithZeroQuatient_When_GetDividendLessThanDivisor() {
+    void Should_ResultWithZeroQuotient_When_GetDividendLessThanDivisor() {
         Result actualResult = calculator.divide(4, 10);
         Result expectedExpected = new Result(4, 10, 0, 1, null);
         Assertions.assertEquals(expectedExpected, actualResult);
     }
 
     @Test
-    void Should_ResultWithSteps_When_GetNegativeDivisorAndDividendn() {
+    void Should_ResultWithSteps_When_GetNegativeDivisorAndDividend() {
         Result actualResult = calculator.divide(-1234, -12);
         Result expectedExpected = new Result(1234, 12, 102, 10, Arrays.asList(
                 new Step(12, 12, 0, 1),
