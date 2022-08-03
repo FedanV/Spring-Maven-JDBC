@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Stack;
 
 class CalculatorTest {
@@ -29,18 +30,20 @@ class CalculatorTest {
     @Test
     void Should_ResultWithZeroQuotient_When_GetDividendLessThanDivisor() {
         Result actualResult = calculator.divide(4, 10);
-        Result expectedExpected = new Result(4, 10, 0, 1, null);
+        Result expectedExpected = new Result(4, 10, 0, 1, List.of(
+                new Step(0, 0, 0, 0)
+        ));
         Assertions.assertEquals(expectedExpected, actualResult);
     }
 
     @Test
     void Should_ResultWithSteps_When_GetNegativeDivisorAndDividend() {
-        Result actualResult = calculator.divide(-1234, -12);
-        Result expectedExpected = new Result(1234, 12, 102, 10, Arrays.asList(
-                new Step(12, 12, 0, 1),
-                new Step(34, 24, 10, 2)
+        Result actualResult = calculator.divide(-12, -1);
+        Result expectedResult = new Result(12, 1, 12, 0, Arrays.asList(
+                new Step(1, 1, 0, 1),
+                new Step(2, 2, 0, 2)
         ));
-        Assertions.assertEquals(expectedExpected, actualResult);
+        Assertions.assertEquals(expectedResult, actualResult);
     }
 
 }
