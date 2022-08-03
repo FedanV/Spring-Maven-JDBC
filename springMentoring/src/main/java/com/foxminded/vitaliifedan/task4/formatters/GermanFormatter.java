@@ -1,10 +1,12 @@
 package com.foxminded.vitaliifedan.task4.formatters;
 
-import com.foxminded.vitaliifedan.task4.models.Calculator;
 import com.foxminded.vitaliifedan.task4.models.Result;
 import com.foxminded.vitaliifedan.task4.models.Step;
 
 import java.util.List;
+
+import static com.foxminded.vitaliifedan.utils.NumberUtils.length;
+import static com.foxminded.vitaliifedan.utils.StringUtils.assembleString;
 
 public class GermanFormatter implements Formatter {
 
@@ -27,7 +29,7 @@ public class GermanFormatter implements Formatter {
 
     private String createReminder(Result result) {
 
-        int reminderIndent = Calculator.length(result.getDividend()) - Calculator.length(result.getReminder());
+        int reminderIndent = length(result.getDividend()) - length(result.getReminder());
         return assembleString(reminderIndent + 1, ' ') + result.getReminder();
 
     }
@@ -35,16 +37,22 @@ public class GermanFormatter implements Formatter {
     private String createHeader(Result result) {
 
         List<Step> steps = result.getSteps();
-        int subtrahendLength = Calculator.length(steps.get(0).getSubtrahend());
-        int minuendLength = Calculator.length(steps.get(0).getMinuend());
-        int indent = Calculator.length(minuendLength + 1 - subtrahendLength);
+        int index = 0;
+
+        while (steps.get(index).getStepQuotient() == 0) {
+            index += 1;
+        }
+
+        int subtrahendLength = length(steps.get(index).getSubtrahend());
+        int minuendLength = length(steps.get(index).getMinuend());
+        int indent = length(minuendLength + 1 - subtrahendLength);
 
         StringBuilder headerString = new StringBuilder();
 
         String firstRow = String.format("_%d ÷ %d => %d", result.getDividend(), result.getDivisor(), result.getQuotient());
         headerString.append(firstRow).append("\n");
 
-        String secondRow = assembleString(indent, ' ') + steps.get(0).getSubtrahend();
+        String secondRow = assembleString(indent, ' ') + steps.get(index).getSubtrahend();
         headerString.append(secondRow).append("\n");
 
         String thirdRow = assembleString(indent, ' ') + assembleString(subtrahendLength, '-');
@@ -54,20 +62,37 @@ public class GermanFormatter implements Formatter {
     }
 
     private String createBody(Result result) {
-
         StringBuilder bodyString = new StringBuilder();
         List<Step> steps = result.getSteps();
+        int index = 0;
 
-        for (int i = 1; i < steps.size(); i++) {
+        while (steps.get(index).getStepQuotient() == 0) {
+            index += 1;
+        }
+        int indent = 1;
+        for (int i = index + 1; i < steps.size(); i++) {
+            int subtrahendLength = length(steps.get(i).getSubtrahend());
 
-            int subtrahendLength = Calculator.length(steps.get(i).getSubtrahend());
-            String minuend = assembleString(i - 1, ' ') + "_" + steps.get(i).getMinuend();
-            bodyString.append(minuend).append("\n");
-            String subtrahend = assembleString(i, ' ') + steps.get(i).getSubtrahend();
-            bodyString.append(subtrahend).append("\n");
-            String end = assembleString(i, ' ') + assembleString(subtrahendLength, '-');
-            bodyString.append(end).append("\n");
+            if (steps.get(i - 1).getDifference() == 0) {
+                indent += length(steps.get(i - 1).getSubtrahend());
+                String minuend = assembleString(indent - 1, ' ') + "_" + steps.get(i).getMinuend();
+                bodyString.append(minuend).append("\n");
+                String subtrahend = assembleString(indent, ' ') + steps.get(i).getSubtrahend();
+                bodyString.append(subtrahend).append("\n");
+                String end = assembleString(indent, ' ') + assembleString(subtrahendLength, '-');
+                bodyString.append(end).append("\n");
+            } else {
+                if (length(steps.get(i - 1).getMinuend()) > 1) {
+                    indent += 1;
+                }
+                String minuend = assembleString(indent - 1, ' ') + "_" + steps.get(i).getMinuend();
+                bodyString.append(minuend).append("\n");
+                String subtrahend = assembleString(indent, ' ') + steps.get(i).getSubtrahend();
+                bodyString.append(subtrahend).append("\n");
+                String end = assembleString(indent, ' ') + assembleString(subtrahendLength, '-');
+                bodyString.append(end).append("\n");
 
+            }
         }
 
         return bodyString.toString();
