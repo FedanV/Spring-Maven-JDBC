@@ -5,8 +5,8 @@ import com.foxminded.vitaliifedan.task4.models.Step;
 
 import java.util.List;
 
-import static com.foxminded.vitaliifedan.utils.NumberUtils.length;
-import static com.foxminded.vitaliifedan.utils.StringUtils.assembleString;
+import static com.foxminded.vitaliifedan.task4.utils.NumberUtils.length;
+import static com.foxminded.vitaliifedan.task4.utils.StringUtils.assembleString;
 
 public class GermanFormatter implements Formatter {
 

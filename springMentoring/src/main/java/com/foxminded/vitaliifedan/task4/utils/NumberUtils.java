@@ -1,4 +1,4 @@
-package com.foxminded.vitaliifedan.utils;
+package com.foxminded.vitaliifedan.task4.utils;
 
 public class NumberUtils {
 

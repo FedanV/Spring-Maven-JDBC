@@ -3,7 +3,7 @@ package com.foxminded.vitaliifedan.task4.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.foxminded.vitaliifedan.utils.NumberUtils.numberToDigits;
+import static com.foxminded.vitaliifedan.task4.utils.NumberUtils.numberToDigits;
 
 public class Calculator {
 
