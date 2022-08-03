@@ -62,7 +62,7 @@ class GermanFormatterTest {
                 " _29\n" +
                 "  28\n" +
                 "  --\n" +
-                "     1";
+                "   1";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -79,19 +79,16 @@ class GermanFormatterTest {
         String expectResult = "_122345 ÷ 3 => 40781\n" +
                 " 12\n" +
                 " --\n" +
-                "  _2\n" +
-                "   0\n" +
-                "   -\n" +
-                "  _23\n" +
-                "   21\n" +
+                " _23\n" +
+                "  21\n" +
+                "  --\n" +
+                "  _24\n" +
+                "   24\n" +
                 "   --\n" +
-                "   _24\n" +
-                "    24\n" +
-                "    --\n" +
-                "     _5\n" +
-                "      3\n" +
-                "      -\n" +
-                "      2";
+                "    _5\n" +
+                "     3\n" +
+                "     -\n" +
+                "     2";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -116,7 +113,7 @@ class GermanFormatterTest {
                 "   _25\n" +
                 "    24\n" +
                 "    --\n" +
-                "      2";
+                "     2";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -132,15 +129,6 @@ class GermanFormatterTest {
         String expectResult = "_10001 ÷ 1 => 10001\n" +
                 " 1\n" +
                 " -\n" +
-                " _0\n" +
-                "  0\n" +
-                "  -\n" +
-                "  _0\n" +
-                "   0\n" +
-                "   -\n" +
-                "   _0\n" +
-                "    0\n" +
-                "    -\n" +
                 "    _1\n" +
                 "     1\n" +
                 "     -\n" +

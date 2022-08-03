@@ -65,7 +65,7 @@ class ClassicFormatterTest {
                 " _29\n" +
                 "  28\n" +
                 "  --\n" +
-                "     1";
+                "   1";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -82,19 +82,16 @@ class ClassicFormatterTest {
         String expectResult = "_122345│3\n" +
                 " 12    │-----\n" +
                 " --    │40781\n" +
-                "  _2\n" +
-                "   0\n" +
-                "   -\n" +
-                "  _23\n" +
-                "   21\n" +
+                " _23\n" +
+                "  21\n" +
+                "  --\n" +
+                "  _24\n" +
+                "   24\n" +
                 "   --\n" +
-                "   _24\n" +
-                "    24\n" +
-                "    --\n" +
-                "     _5\n" +
-                "      3\n" +
-                "      -\n" +
-                "      2";
+                "    _5\n" +
+                "     3\n" +
+                "     -\n" +
+                "     2";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -119,7 +116,7 @@ class ClassicFormatterTest {
                 "   _25\n" +
                 "    24\n" +
                 "    --\n" +
-                "      2";
+                "     2";
         Assertions.assertEquals(expectResult, formatter.format(result));
     }
 
@@ -135,15 +132,6 @@ class ClassicFormatterTest {
         String expectResult = "_10001│1\n" +
                 " 1    │-----\n" +
                 " -    │10001\n" +
-                " _0\n" +
-                "  0\n" +
-                "  -\n" +
-                "  _0\n" +
-                "   0\n" +
-                "   -\n" +
-                "   _0\n" +
-                "    0\n" +
-                "    -\n" +
                 "    _1\n" +
                 "     1\n" +
                 "     -\n" +
