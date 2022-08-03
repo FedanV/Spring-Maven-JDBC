@@ -1,5 +1,6 @@
 package com.foxminded.vitaliifedan.task4.models;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class Result {
         this.divisor = divisor;
         this.quotient = quotient;
         this.reminder = reminder;
-        this.steps = steps;
+        this.steps = Collections.unmodifiableList(steps);
     }
 
     public List<Step> getSteps() {
