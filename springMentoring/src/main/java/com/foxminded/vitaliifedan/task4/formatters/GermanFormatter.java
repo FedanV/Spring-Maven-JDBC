@@ -22,15 +22,18 @@ public class GermanFormatter implements Formatter {
 
         germanResult.append(createHeader(result));
         germanResult.append(createBody(result));
-        germanResult.append(createReminder(result));
 
         return germanResult.toString();
     }
 
-    private String createReminder(Result result) {
+    private String createReminder(Result result, int indent) {
 
-        int reminderIndent = length(result.getDividend()) - length(result.getReminder());
-        return assembleString(reminderIndent + 1, ' ') + result.getReminder();
+        List<Step> steps = result.getSteps();
+        int lastIndex = steps.size() - 1;
+        if (length(steps.get(lastIndex).getSubtrahend()) > 1) {
+            indent += length(steps.get(lastIndex).getSubtrahend()) - 1;
+        }
+        return assembleString(indent, ' ') + result.getReminder();
 
     }
 
@@ -73,6 +76,11 @@ public class GermanFormatter implements Formatter {
         for (int i = index + 1; i < steps.size(); i++) {
             int subtrahendLength = length(steps.get(i).getSubtrahend());
 
+            if (steps.get(i).getMinuend() == 0 || steps.get(i).getSubtrahend() == 0) {
+                indent += 1;
+                continue;
+            }
+
             if (steps.get(i - 1).getDifference() == 0) {
                 indent += length(steps.get(i - 1).getSubtrahend());
                 String minuend = assembleString(indent - 1, ' ') + "_" + steps.get(i).getMinuend();
@@ -94,6 +102,7 @@ public class GermanFormatter implements Formatter {
 
             }
         }
+        bodyString.append(createReminder(result, indent));
 
         return bodyString.toString();
     }
