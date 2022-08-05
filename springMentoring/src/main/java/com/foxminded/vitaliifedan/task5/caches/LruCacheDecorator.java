@@ -17,6 +17,7 @@ public class LruCacheDecorator implements CharCounter, Cache<String, Map<Charact
     private int size;
     private final CharCounter charCounter;
 
+
     public LruCacheDecorator(CharCounter charCounter, int capacity) {
 
         this.charCounter = charCounter;
@@ -39,7 +40,6 @@ public class LruCacheDecorator implements CharCounter, Cache<String, Map<Charact
             put(key, charCounter.count(key));
         }
         return get(key);
-
     }
 
     @Override
