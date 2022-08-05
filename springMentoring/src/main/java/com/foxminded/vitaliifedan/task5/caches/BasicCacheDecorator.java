@@ -15,6 +15,11 @@ public class BasicCacheDecorator implements CharCounter, Cache<String, Map<Chara
         this.cache = new HashMap<>();
     }
 
+    public BasicCacheDecorator(CharCounter charCounter, Map<String, Map<Character, Integer>> cache) {
+        this.cache = cache;
+        this.charCounter = charCounter;
+    }
+
     @Override
     public Map<Character, Integer> get(String key) {
         return cache.get(key);
