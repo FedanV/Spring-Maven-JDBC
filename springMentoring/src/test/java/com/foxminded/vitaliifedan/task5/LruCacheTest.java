@@ -1,39 +1,28 @@
 package com.foxminded.vitaliifedan.task5;
 
-import com.foxminded.vitaliifedan.task5.caches.LruCacheDecorator;
+import com.foxminded.vitaliifedan.task5.caches.LruCache;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.*;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+class LruCacheTest {
+    static LruCache lruCacheDecorator;
 
-@ExtendWith(MockitoExtension.class)
-class LruCacheDecoratorTest {
-    LruCacheDecorator lruCacheDecorator;
-    CharCounter charCounter;
-
-    @BeforeEach
-    void setup() {
-        charCounter = mock(CharCounter.class);
-        lruCacheDecorator = new LruCacheDecorator(charCounter, 3);
+    @BeforeAll
+    static void setup() {
+        lruCacheDecorator = new LruCache(3);
     }
-
 
     @Test
     void Should_EmptyMap_WhenKeyIsNull() {
-
         Assertions.assertEquals(Collections.emptyMap(), lruCacheDecorator.get("test"));
-
     }
 
     @Test
     void Should_ReturnMap_When_MethodGet_ReceiveExistingKey() {
+
         String key = "test";
         Map<Character, Integer> value = Map.of('t', 1);
         lruCacheDecorator.put(key, value);
@@ -83,16 +72,5 @@ class LruCacheDecoratorTest {
         Assertions.assertEquals(expectedResult, actualResult);
 
     }
-
-    @Test
-    void Should_ReturnMapWithCharactersCount_When_MethodCount_GetText() {
-
-        Map<Character, Integer> map = Map.of('t', 1);
-        when(charCounter.count("test")).thenReturn(map);
-        Assertions.assertEquals(map, lruCacheDecorator.count("test"));
-
-
-    }
-
 
 }
