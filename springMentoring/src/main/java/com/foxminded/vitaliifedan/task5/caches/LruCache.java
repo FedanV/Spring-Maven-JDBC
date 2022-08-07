@@ -1,12 +1,11 @@
 package com.foxminded.vitaliifedan.task5.caches;
 
-import java.util.Collections;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LruCache implements Cache<String, Map<Character, Integer>> {
-    private Map<String, LinkedNode> cache;
+public class LruCache<K, V> implements Cache<K, V> {
+    private Map<K, LinkedNode> cache;
     private LinkedNode head;
     private LinkedNode tail;
     private final int capacity;
@@ -26,11 +25,11 @@ public class LruCache implements Cache<String, Map<Character, Integer>> {
     }
 
     @Override
-    public Map<Character, Integer> get(String key) {
+    public V get(K key) {
 
         LinkedNode node = cache.get(key);
         if (node == null) {
-            return Collections.emptyMap();
+            return null;
         }
         remove(node);
         moveToHead(node);
@@ -39,7 +38,7 @@ public class LruCache implements Cache<String, Map<Character, Integer>> {
     }
 
     @Override
-    public void put(String key, Map<Character, Integer> value) {
+    public void put(K key, V value) {
 
         LinkedNode node = cache.get(key);
         if (node != null) {
@@ -81,14 +80,14 @@ public class LruCache implements Cache<String, Map<Character, Integer>> {
     }
 
     @Override
-    public boolean contains(String key) {
-        return cache.containsKey(key.trim());
+    public boolean contains(K key) {
+        return cache.containsKey(key);
     }
 
     private class LinkedNode {
 
-        Map<Character, Integer> value = new HashMap<>();
-        String key;
+        V value;
+        K key;
         LinkedNode next;
         LinkedNode prev;
 
