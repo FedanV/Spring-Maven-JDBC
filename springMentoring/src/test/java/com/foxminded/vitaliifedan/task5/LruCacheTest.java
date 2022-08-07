@@ -8,16 +8,16 @@ import org.junit.jupiter.api.Test;
 import java.util.*;
 
 class LruCacheTest {
-    static LruCache lruCacheDecorator;
+    static LruCache<String, Map<Character, Integer>> lruCacheDecorator;
 
     @BeforeAll
     static void setup() {
-        lruCacheDecorator = new LruCache(3);
+        lruCacheDecorator = new LruCache<>(3);
     }
 
     @Test
-    void Should_EmptyMap_WhenKeyIsNull() {
-        Assertions.assertEquals(Collections.emptyMap(), lruCacheDecorator.get("test"));
+    void Should_ReturnNull_WhenKeyIsNull() {
+        Assertions.assertNull(lruCacheDecorator.get("test"));
     }
 
     @Test

@@ -9,11 +9,11 @@ import java.util.*;
 
 class BasicCacheTest {
 
-    static BasicCache basicCache;
+    static BasicCache<String, Map<Character, Integer>> basicCache;
 
     @BeforeAll
     static void setup() {
-        basicCache = new BasicCache();
+        basicCache = new BasicCache<>();
     }
 
     @Test
