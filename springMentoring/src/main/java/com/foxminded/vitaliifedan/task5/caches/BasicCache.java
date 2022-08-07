@@ -3,26 +3,26 @@ package com.foxminded.vitaliifedan.task5.caches;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasicCache implements Cache<String, Map<Character, Integer>> {
+public class BasicCache<K, V> implements Cache<K, V> {
 
-    private final Map<String, Map<Character, Integer>> cache;
+    private final Map<K, V> cache;
 
     public BasicCache() {
         this.cache = new HashMap<>();
     }
 
     @Override
-    public Map<Character, Integer> get(String key) {
+    public V get(K key) {
         return cache.get(key);
     }
 
     @Override
-    public void put(String key, Map<Character, Integer> value) {
+    public void put(K key, V value) {
         cache.put(key, value);
     }
 
     @Override
-    public boolean contains(String key) {
+    public boolean contains(K key) {
         return cache.containsKey(key);
     }
 
