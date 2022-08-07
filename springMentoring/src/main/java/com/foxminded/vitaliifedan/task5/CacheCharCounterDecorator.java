@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class CacheCharCounterDecorator implements CharCounter {
 
-    private Cache<String, Map<Character, Integer>> cache;
-    private CharCounter charCounter;
+    private final Cache<String, Map<Character, Integer>> cache;
+    private final CharCounter charCounter;
 
     public CacheCharCounterDecorator(CharCounter charCounter, Cache<String, Map<Character, Integer>> cache) {
         this.charCounter = charCounter;

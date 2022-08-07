@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LruCache<K, V> implements Cache<K, V> {
-    private Map<K, LinkedNode> cache;
-    private LinkedNode head;
-    private LinkedNode tail;
+    private final Map<K, LinkedNode> cache;
+    private final LinkedNode head;
+    private final LinkedNode tail;
     private final int capacity;
     private int size;
 
