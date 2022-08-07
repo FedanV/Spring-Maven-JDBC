@@ -1,26 +1,19 @@
 package com.foxminded.vitaliifedan.task5.caches;
 
-import com.foxminded.vitaliifedan.task5.CharCounter;
-
 import java.util.Collections;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class LruCacheDecorator implements CharCounter, Cache<String, Map<Character, Integer>> {
+public class LruCache implements Cache<String, Map<Character, Integer>> {
     private Map<String, LinkedNode> cache;
-
     private LinkedNode head;
     private LinkedNode tail;
-
     private final int capacity;
     private int size;
-    private final CharCounter charCounter;
 
+    public LruCache(int capacity) {
 
-    public LruCacheDecorator(CharCounter charCounter, int capacity) {
-
-        this.charCounter = charCounter;
         this.capacity = capacity;
 
         cache = new HashMap<>(capacity);
@@ -30,16 +23,6 @@ public class LruCacheDecorator implements CharCounter, Cache<String, Map<Charact
         head.next = tail;
         tail.prev = head;
 
-    }
-
-    @Override
-    public Map<Character, Integer> count(String text) {
-
-        String key = text.trim();
-        if (!contains(key)) {
-            put(key, charCounter.count(key));
-        }
-        return get(key);
     }
 
     @Override
@@ -103,6 +86,7 @@ public class LruCacheDecorator implements CharCounter, Cache<String, Map<Charact
     }
 
     private class LinkedNode {
+
         Map<Character, Integer> value = new HashMap<>();
         String key;
         LinkedNode next;

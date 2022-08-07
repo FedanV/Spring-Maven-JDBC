@@ -1,10 +1,10 @@
 package com.foxminded.vitaliifedan.task5.caches;
 
-public interface Cache<K, T> {
+public interface Cache<K, V> {
 
-    T get(K key);
+    V get(K key);
 
-    void put(K key, T value);
+    void put(K key, V value);
 
     boolean contains(K key);
 
