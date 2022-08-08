@@ -16,10 +16,9 @@ public class CacheCharCounterDecorator implements CharCounter {
 
     @Override
     public Map<Character, Integer> count(String text) {
-        String key = text.trim();
-        if (!cache.contains(key)) {
-            cache.put(key, charCounter.count(key));
+        if (!cache.contains(text)) {
+            cache.put(text, charCounter.count(text));
         }
-        return cache.get(key);
+        return cache.get(text);
     }
 }

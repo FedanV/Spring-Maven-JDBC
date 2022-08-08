@@ -13,7 +13,7 @@ public class BasicCharCounter implements CharCounter {
         }
 
         Map<Character, Integer> countUniqueCharacter = new HashMap<>();
-        String[] words = text.trim().toLowerCase().split("");
+        String[] words = text.toLowerCase().split("");
         for (String word : words) {
             for (Character c : word.toCharArray()) {
                 if (countUniqueCharacter.containsKey(c)) {

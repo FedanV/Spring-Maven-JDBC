@@ -1,6 +1,5 @@
 package com.foxminded.vitaliifedan.task5.caches;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
