@@ -27,7 +27,7 @@ class ParserTest {
     }
 
     @Test
-    void Should_ReturnListOfRacers_When_GetPathToFiles() {
+    void should_ReturnListOfRacers_When_GetPathToFiles() {
         Racer racer1 = new Racer(
                 "SVF",
                 "Sebastian Vettel",

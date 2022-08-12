@@ -51,7 +51,7 @@ public class Parser {
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -72,7 +72,7 @@ public class Parser {
                 }
             });
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
