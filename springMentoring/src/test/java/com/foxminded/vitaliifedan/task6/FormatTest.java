@@ -5,24 +5,12 @@ import com.foxminded.vitaliifedan.task6.models.Racer;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
-
-@ExtendWith(MockitoExtension.class)
 class FormatTest {
-
-    @Mock
-    Racer racer;
-
-    @Mock
-    List<Racer> racers = new ArrayList<>();
     static Format format;
 
     @BeforeAll
@@ -31,17 +19,31 @@ class FormatTest {
     }
 
     @Test
-    void Should_ReturnFormattedString_When_GetListOfRacers() {
-        when(racers.size()).thenReturn(2);
-        when(racers.get(0)).thenReturn(racer);
-        when(racers.get(1)).thenReturn(racer);
-        when(racer.getFullName()).thenReturn("Daniel Ricciardo");
-        when(racer.getCar()).thenReturn("RED BULL RACING TAG HEUER");
-        when(racer.getTimeDiff()).thenReturn(LocalDateTime.parse("2018-05-25T12:20:59.963"));
-        String actualResult = format.apply(racers, 1);
-        String expectedResult = " 1.Daniel Ricciardo     |RED BULL RACING TAG HEUER      |20:59.963\n" +
-                "------------------------------------------------------------------\n" +
-                " 2.Daniel Ricciardo     |RED BULL RACING TAG HEUER      |20:59.963\n";
+    void should_ReturnFormattedString_When_GetListOfRacers() {
+        Racer racer1 = new Racer(
+                "SVF",
+                "Sebastian Vettel",
+                "FERRARI",
+                Arrays.asList(LocalDateTime.parse("2018-05-24T12:02:58.917"), LocalDateTime.parse("2018-05-24T12:04:03.332"))
+        );
+        Racer racer2 = new Racer(
+                "BHS",
+                "Brendon Hartley",
+                "SCUDERIA TORO ROSSO HONDA",
+                Arrays.asList(LocalDateTime.parse("2018-05-24T12:14:51.985"), LocalDateTime.parse("2018-05-24T12:16:05.164"))
+        );
+        Racer racer3 = new Racer(
+                "SPF",
+                "Sergio Perez",
+                "FORCE INDIA MERCEDES",
+                Arrays.asList(LocalDateTime.parse("2018-05-24T12:12:01.035"), LocalDateTime.parse("2018-05-24T12:13:13.883"))
+        );
+        List<Racer> racers = Arrays.asList(racer1, racer2, racer3);
+        String actualResult = format.apply(racers, 2);
+        String expectedResult = " 1.Sebastian Vettel     |FERRARI                        |1:04.415\n" +
+                " 2.Brendon Hartley      |SCUDERIA TORO ROSSO HONDA      |1:13.179\n" +
+                "-----------------------------------------------------------------\n" +
+                " 3.Sergio Perez         |FORCE INDIA MERCEDES           |1:12.848\n";
         Assertions.assertEquals(expectedResult, actualResult);
     }
 
