@@ -4,10 +4,7 @@ import com.foxminded.vitaliifedan.task7.dao.CourseDao;
 import com.foxminded.vitaliifedan.task7.dao.mappers.CourseMapper;
 import com.foxminded.vitaliifedan.task7.models.Course;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,23 +18,36 @@ public class CourseDaoImpl implements CourseDao {
     }
 
     @Override
-    public void create(Connection connection, Course entity) throws SQLException {
+    public Course create(Connection connection, Course entity) throws SQLException {
         String createCourse = "INSERT INTO courses(course_name, course_description) VALUES(?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(createCourse)) {
+        try (PreparedStatement statement = connection.prepareStatement(createCourse, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, entity.getCourseName());
             statement.setString(2, entity.getCourseDescription());
-            statement.executeUpdate();
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Creating course " + entity.getCourseName() + " failed");
+            }
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (!generatedKeys.next()) {
+                    throw new SQLException("Unable to retrieve id");
+                }
+                return new Course(generatedKeys.getLong("course_id"), entity.getCourseName(), entity.getCourseDescription());
+            }
         }
     }
 
     @Override
-    public void update(Connection connection, Course entity) throws SQLException {
+    public Course update(Connection connection, Course entity) throws SQLException {
         String updateCourse = "UPDATE courses SET course_name=?, course_description=? WHERE course_id=?";
         try (PreparedStatement statement = connection.prepareStatement(updateCourse)) {
             statement.setString(1, entity.getCourseName());
             statement.setString(2, entity.getCourseDescription());
-            statement.setInt(3, entity.getCourseId());
-            statement.executeUpdate();
+            statement.setLong(3, entity.getCourseId());
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Unable to update " + entity);
+            }
+            return new Course(entity.getCourseId(), entity.getCourseName(), entity.getCourseDescription());
         }
     }
 
@@ -46,32 +56,34 @@ public class CourseDaoImpl implements CourseDao {
         String getAllCourses = "SELECT * FROM courses ORDER BY course_id";
         List<Course> courses = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(getAllCourses)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                courses.add(courseMapper.get(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    courses.add(courseMapper.get(resultSet));
+                }
             }
         }
         return courses;
     }
 
     @Override
-    public Optional<Course> findById(Connection connection, Integer id) throws SQLException {
+    public Optional<Course> findById(Connection connection, Long id) throws SQLException {
         String getCourseById = "SELECT * FROM courses WHERE course_id=?";
         try (PreparedStatement statement = connection.prepareStatement(getCourseById)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(courseMapper.get(resultSet));
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(courseMapper.get(resultSet));
+                }
             }
         }
         return Optional.empty();
     }
 
     @Override
-    public void deleteById(Connection connection, Integer id) throws SQLException {
+    public void deleteById(Connection connection, Long id) throws SQLException {
         String deleteCourseById = "DELETE FROM courses WHERE course_id=?";
         try (PreparedStatement statement = connection.prepareStatement(deleteCourseById)) {
-            statement.setInt(1, id);
+            statement.setLong(1, id);
             statement.executeUpdate();
         }
     }
@@ -81,9 +93,10 @@ public class CourseDaoImpl implements CourseDao {
         String findByCourseName = "SELECT * FROM courses WHERE course_name=?";
         try (PreparedStatement statement = connection.prepareStatement(findByCourseName)) {
             statement.setString(1, courseName);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(courseMapper.get(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(courseMapper.get(resultSet));
+                }
             }
         }
         return Optional.empty();

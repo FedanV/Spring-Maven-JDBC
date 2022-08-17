@@ -4,10 +4,7 @@ import com.foxminded.vitaliifedan.task7.dao.StudentDao;
 import com.foxminded.vitaliifedan.task7.dao.mappers.StudentMapper;
 import com.foxminded.vitaliifedan.task7.models.Student;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,26 +17,40 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public void create(Connection connection, Student entity) throws SQLException {
+    public Student create(Connection connection, Student entity) throws SQLException {
         String createStudent = "INSERT INTO students(group_id, first_name, last_name) VALUES(?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(createStudent)) {
-            statement.setInt(1, entity.getGroupId());
+        try (PreparedStatement statement = connection.prepareStatement(createStudent, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setLong(1, entity.getGroupId());
             statement.setString(2, entity.getFirstName());
             statement.setString(3, entity.getLastName());
-            statement.executeUpdate();
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Creation user " + entity.getFirstName() + " " + entity.getLastName() + " failed");
+            }
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (!generatedKeys.next()) {
+                    throw new SQLException("Unable to create student");
+                }
+                return new Student(generatedKeys.getLong("student_id"),
+                        entity.getGroupId(), entity.getFirstName(), entity.getLastName());
+            }
         }
     }
 
     @Override
-    public void update(Connection connection, Student entity) throws SQLException {
+    public Student update(Connection connection, Student entity) throws SQLException {
 
         String updateStudent = "UPDATE students SET group_id=?, first_name=?, last_name=? WHERE student_id=?";
         try (PreparedStatement statement = connection.prepareStatement(updateStudent)) {
-            statement.setInt(1, entity.getGroupId());
+            statement.setLong(1, entity.getGroupId());
             statement.setString(2, entity.getFirstName());
             statement.setString(3, entity.getLastName());
-            statement.setInt(4, entity.getStudentId());
-            statement.executeUpdate();
+            statement.setLong(4, entity.getStudentId());
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Unable to update student with id " + entity.getStudentId());
+            }
+            return new Student(entity.getStudentId(), entity.getGroupId(), entity.getFirstName(), entity.getLastName());
         }
     }
 
@@ -48,33 +59,38 @@ public class StudentDaoImpl implements StudentDao {
         String getAllStudents = "SELECT * FROM students";
         List<Student> students = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(getAllStudents)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                students.add(studentMapper.get(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    students.add(studentMapper.get(resultSet));
+                }
             }
         }
         return students;
     }
 
     @Override
-    public Optional<Student> findById(Connection connection, Integer id) throws SQLException {
+    public Optional<Student> findById(Connection connection, Long id) throws SQLException {
         String getStudentById = "SELECT * FROM students WHERE student_id=?";
         try (PreparedStatement statement = connection.prepareStatement(getStudentById)) {
-            statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(studentMapper.get(resultSet));
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(studentMapper.get(resultSet));
+                }
             }
         }
         return Optional.empty();
     }
 
     @Override
-    public void deleteById(Connection connection, Integer id) throws SQLException {
+    public void deleteById(Connection connection, Long id) throws SQLException {
         String deleteStudentById = "DELETE FROM students WHERE student_id=?";
         try (PreparedStatement statement = connection.prepareStatement(deleteStudentById)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
+            statement.setLong(1, id);
+            int affectedRow = statement.executeUpdate();
+            if (affectedRow == 0) {
+                throw new SQLException("Unable to deleted student with id " + id);
+            }
         }
     }
 
@@ -87,9 +103,10 @@ public class StudentDaoImpl implements StudentDao {
                 "WHERE c.course_name = ?";
         try (PreparedStatement statement = connection.prepareStatement(findAllStudentsByCourseName)) {
             statement.setString(1, courseName);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                students.add(studentMapper.get(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    students.add(studentMapper.get(resultSet));
+                }
             }
         }
         return students;

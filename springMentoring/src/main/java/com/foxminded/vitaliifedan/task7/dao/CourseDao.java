@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public interface CourseDao extends CrudDao<Course, Integer> {
+public interface CourseDao extends CrudDao<Course, Long> {
 
     Optional<Course> findByCourseName(Connection connection, String courseName) throws SQLException;
 }

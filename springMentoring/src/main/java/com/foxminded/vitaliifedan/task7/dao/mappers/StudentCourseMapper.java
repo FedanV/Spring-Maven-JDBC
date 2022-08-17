@@ -9,8 +9,8 @@ public class StudentCourseMapper implements Mapper<StudentCourse>{
     @Override
     public StudentCourse get(ResultSet rs) throws SQLException {
         return new StudentCourse(
-                rs.getInt("student_id"),
-                rs.getInt("course_id")
+                rs.getLong("student_id"),
+                rs.getLong("course_id")
         );
     }
 }

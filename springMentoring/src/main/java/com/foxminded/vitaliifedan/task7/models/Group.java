@@ -3,15 +3,15 @@ package com.foxminded.vitaliifedan.task7.models;
 import java.util.Objects;
 
 public class Group {
-    private int groupId;
+    private Long groupId;
     private String groupName;
 
-    public Group(int groupId, String groupName) {
+    public Group(long groupId, String groupName) {
         this.groupId = groupId;
         this.groupName = groupName;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
@@ -28,7 +28,7 @@ public class Group {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Group group = (Group) o;
-        return groupId == group.groupId && Objects.equals(groupName, group.groupName);
+        return Objects.equals(groupId, group.groupId) && Objects.equals(groupName, group.groupName);
     }
 
     @Override

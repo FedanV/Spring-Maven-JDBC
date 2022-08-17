@@ -4,11 +4,11 @@ import java.util.Objects;
 
 public class Course {
 
-    private int courseId;
+    private long courseId;
     private String courseName;
     private String courseDescription;
 
-    public Course(int courseId, String courseName, String courseDescription) {
+    public Course(long courseId, String courseName, String courseDescription) {
         this.courseId = courseId;
         this.courseName = courseName;
         this.courseDescription = courseDescription;
@@ -19,7 +19,7 @@ public class Course {
         this.courseDescription = courseDescription;
     }
 
-    public int getCourseId() {
+    public long getCourseId() {
         return courseId;
     }
 

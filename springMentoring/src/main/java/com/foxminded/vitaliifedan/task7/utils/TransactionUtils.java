@@ -7,8 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class TransactionUtils {
-    public static void transaction(ConnectionConsumer consumer) throws SQLException, IOException {
-        try (Connection connection = DataSource.getConnection()) {
+    public static void transaction(DataSource dataSource, ConnectionConsumer consumer) throws SQLException, IOException {
+        try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(false);
             try {
                 consumer.consume(connection);

@@ -29,8 +29,8 @@ public class StudentCourseDaoImpl implements StudentCourseDao {
 
     @Override
     public void createStudentCourse(Connection connection, StudentCourse entity) throws SQLException {
-        List<Integer> studentIds = studentDao.getAll(connection).stream().map(Student::getStudentId).toList();
-        List<Integer> courseIds = courseDao.getAll(connection).stream().map(Course::getCourseId).toList();
+        List<Long> studentIds = studentDao.getAll(connection).stream().map(Student::getStudentId).toList();
+        List<Long> courseIds = courseDao.getAll(connection).stream().map(Course::getCourseId).toList();
 
         if (!studentIds.contains(entity.getStudentId())) {
             throw new IllegalArgumentException("Table 'students' doesn't contain this student");
@@ -46,33 +46,34 @@ public class StudentCourseDaoImpl implements StudentCourseDao {
 
         String createStudentCourse = "INSERT INTO students_courses(student_id, course_id) VALUES(?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(createStudentCourse)) {
-            statement.setInt(1, entity.getStudentId());
-            statement.setInt(2, entity.getCourseId());
+            statement.setLong(1, entity.getStudentId());
+            statement.setLong(2, entity.getCourseId());
             statement.executeUpdate();
         }
     }
 
     @Override
-    public Optional<StudentCourse> findByStudentIdAndCourseId(Connection connection, int studentId, int courseId) throws SQLException {
+    public Optional<StudentCourse> findByStudentIdAndCourseId(Connection connection, long studentId, long courseId) throws SQLException {
         String findStudentIdAndCourseId = "SELECT * FROM students_courses WHERE student_id=? AND course_id=?";
         try (PreparedStatement statement = connection.prepareStatement(findStudentIdAndCourseId)) {
-            statement.setInt(1, studentId);
-            statement.setInt(2, courseId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return Optional.of(studentCourseMapper.get(resultSet));
+            statement.setLong(1, studentId);
+            statement.setLong(2, courseId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return Optional.of(studentCourseMapper.get(resultSet));
+                }
             }
         }
         return Optional.empty();
     }
 
     @Override
-    public void removeStudentByCourseName(Connection connection, int studentId, String courseName) throws SQLException {
+    public void removeStudentByCourseName(Connection connection, long studentId, String courseName) throws SQLException {
         String removeStudentByCourseName = "DELETE FROM students_courses AS sc " +
                 "USING courses AS c " +
                 "WHERE sc.course_id = c.course_id AND sc.student_id = ? AND c.course_name = ? ";
-        try(PreparedStatement statement = connection.prepareStatement(removeStudentByCourseName)) {
-            statement.setInt(1, studentId);
+        try (PreparedStatement statement = connection.prepareStatement(removeStudentByCourseName)) {
+            statement.setLong(1, studentId);
             statement.setString(2, courseName);
             statement.executeUpdate();
         }

@@ -1,5 +1,7 @@
 package com.foxminded.vitaliifedan.task7.utils;
 
+import com.foxminded.vitaliifedan.task7.dao.datasource.DataSource;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,8 +20,8 @@ public class SqlUtils {
         }
     }
 
-    public static void executeSqlScriptFile(String fileName) throws SQLException, IOException {
-        transaction(connection ->
+    public static void executeSqlScriptFile(DataSource dataSource, String fileName) throws SQLException, IOException {
+        transaction(dataSource, connection ->
                 SqlUtils.executeSqlScript(connection, ResourcesUtils.loadTextFileFromResources(fileName)));
     }
 

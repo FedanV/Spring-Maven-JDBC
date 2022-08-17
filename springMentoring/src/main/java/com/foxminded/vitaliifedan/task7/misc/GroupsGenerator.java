@@ -9,18 +9,18 @@ import java.sql.SQLException;
 
 public class GroupsGenerator {
 
-    private SecureRandom random;
+    private final SecureRandom random;
 
     private static final char[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private final GroupDao groupDao;
 
     public GroupsGenerator(GroupDao groupDao) {
         this.groupDao = groupDao;
-        this.random = new SecureRandom();
+        this.random = new SecureRandom(new byte[]{1, 2, 3, 4});
     }
 
     public void generateGroups(Connection connection, int count) throws SQLException {
-        for(int i = 0; i < count; i++) {
+        for (int i = 0; i < count; i++) {
             String groupName = generateGroupName();
             groupDao.create(connection, new Group(i, groupName));
         }

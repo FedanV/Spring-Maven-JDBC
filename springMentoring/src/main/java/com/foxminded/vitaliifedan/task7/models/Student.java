@@ -3,33 +3,33 @@ package com.foxminded.vitaliifedan.task7.models;
 import java.util.Objects;
 
 public class Student {
-    private int studentId;
-    private int groupId;
+    private long studentId;
+    private long groupId;
     private String firstName;
     private String lastName;
 
-    public Student(int studentId, int groupId, String firstName, String lastName) {
+    public Student(long studentId, long groupId, String firstName, String lastName) {
         this.studentId = studentId;
         this.groupId = groupId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public Student(int groupId, String firstName, String lastName) {
+    public Student(long groupId, String firstName, String lastName) {
         this.groupId = groupId;
         this.firstName = firstName;
         this.lastName = lastName;
     }
 
-    public int getStudentId() {
+    public long getStudentId() {
         return studentId;
     }
 
-    public int getGroupId() {
+    public long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(int groupId) {
+    public void setGroupId(long groupId) {
         this.groupId = groupId;
     }
 

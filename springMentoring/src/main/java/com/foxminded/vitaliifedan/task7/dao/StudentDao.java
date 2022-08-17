@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public interface StudentDao extends CrudDao<Student, Integer> {
+public interface StudentDao extends CrudDao<Student, Long> {
 
     List<Student> findAllStudentsByCourseName(Connection connection, String courseName) throws SQLException;
 }

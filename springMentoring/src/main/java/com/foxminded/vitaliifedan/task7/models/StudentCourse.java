@@ -1,27 +1,27 @@
 package com.foxminded.vitaliifedan.task7.models;
 
 public class StudentCourse {
-    private int studentId;
-    private int courseId;
+    private long studentId;
+    private long courseId;
 
-    public StudentCourse(int studentId, int courseId) {
+    public StudentCourse(long studentId, long courseId) {
         this.studentId = studentId;
         this.courseId = courseId;
     }
 
-    public int getStudentId() {
+    public long getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(int studentId) {
+    public void setStudentId(long studentId) {
         this.studentId = studentId;
     }
 
-    public int getCourseId() {
+    public long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(long courseId) {
         this.courseId = courseId;
     }
 }

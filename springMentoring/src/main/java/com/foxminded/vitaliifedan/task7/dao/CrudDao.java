@@ -7,9 +7,9 @@ import java.util.Optional;
 
 public interface CrudDao<T, K> {
 
-    void create(Connection connection, T entity) throws SQLException;
+    T create(Connection connection, T entity) throws SQLException;
 
-    void update(Connection connection, T entity) throws SQLException;
+    T update(Connection connection, T entity) throws SQLException;
 
     List<T> getAll(Connection connection) throws SQLException;
 

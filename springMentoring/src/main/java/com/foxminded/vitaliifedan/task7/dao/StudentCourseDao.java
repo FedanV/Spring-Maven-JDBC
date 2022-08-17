@@ -10,8 +10,8 @@ public interface StudentCourseDao {
 
     void createStudentCourse(Connection connection, StudentCourse entity) throws SQLException;
 
-    Optional<StudentCourse> findByStudentIdAndCourseId(Connection connection, int studentId, int courseId) throws SQLException;
+    Optional<StudentCourse> findByStudentIdAndCourseId(Connection connection, long studentId, long courseId) throws SQLException;
 
-    void removeStudentByCourseName(Connection connection, int studentId, String courseName) throws SQLException;
+    void removeStudentByCourseName(Connection connection, long studentId, String courseName) throws SQLException;
 
 }
