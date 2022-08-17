@@ -30,15 +30,15 @@ public class StudentsGenerator {
     public StudentsGenerator(StudentDao studentDao, GroupDao groupDao) {
         this.studentDao = studentDao;
         this.groupDao = groupDao;
-        this.random = new SecureRandom();
+        this.random = new SecureRandom(new byte[]{1, 2, 3, 4});
     }
 
     public void generateStudents(Connection connection, int count) throws SQLException {
-        List<Integer> groupIds = groupDao.getAll(connection).stream().map(Group::getGroupId).toList();
+        List<Long> groupIds = groupDao.getAll(connection).stream().map(Group::getGroupId).toList();
         for (int i = 0; i < count; i++) {
             studentDao.create(connection, new Student(
                     i,
-                    groupIds.get(random.nextInt(groupIds.size())),
+                    groupIds.get((random.nextInt(groupIds.size()))),
                     firstName.get(random.nextInt(firstName.size())),
                     lastName.get(random.nextInt(lastName.size()))
             ));

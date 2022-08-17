@@ -24,20 +24,20 @@ public class StudentsCoursesGenerator {
         this.studentDao = studentDao;
         this.courseDao = courseDao;
         this.studentCourseDao = studentCourseDao;
-        this.random = new SecureRandom();
+        this.random = new SecureRandom(new byte[]{1, 2, 3, 4});
     }
 
     public void generateStudentsCourses(Connection connection) throws SQLException {
-        List<Integer> studentIds = studentDao.getAll(connection).stream().map(Student::getStudentId).toList();
-        List<Integer> courseIds = courseDao.getAll(connection).stream().map(Course::getCourseId).toList();
-        for (Integer studentId : studentIds) {
+        List<Long> studentIds = studentDao.getAll(connection).stream().map(Student::getStudentId).toList();
+        List<Long> courseIds = courseDao.getAll(connection).stream().map(Course::getCourseId).toList();
+        for (Long studentId : studentIds) {
             for (int j = 0; j < (random.nextInt(2) + 1); j++) {
                 int randomCourse = random.nextInt(courseIds.size());
                 Optional<StudentCourse> existingStudent = studentCourseDao.
                         findByStudentIdAndCourseId(connection, studentId, courseIds.get(randomCourse));
                 if (existingStudent.isEmpty()) {
                     studentCourseDao.createStudentCourse(connection, new StudentCourse(studentId,
-                            courseIds.get(randomCourse)));
+                            Math.toIntExact(courseIds.get(randomCourse))));
                 }
             }
         }
