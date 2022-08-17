@@ -12,55 +12,58 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Optional;
+import java.util.Properties;
 
 class CourseDaoImplTest {
 
     private static CourseDao courseDao;
-    private static Connection connection;
+    private static DataSource dataSource;
 
     @BeforeAll
     static void setup() throws SQLException, IOException {
+        Properties properties = new Properties();
+        properties.setProperty(DataSource.DRIVER_CLASS_NAME, "org.h2.Driver");
+        properties.setProperty(DataSource.JDBC_URL, "jdbc:h2:mem:db1;MODE=PostgreSQL");
+        properties.setProperty(DataSource.USERNAME, "sa");
+        properties.setProperty(DataSource.PASSWORD, "");
         courseDao = new CourseDaoImpl();
-        connection = DataSource.getConnection();
-        SqlUtils.executeSqlScriptFile("task7/init_schema.sql");
+        dataSource = new DataSource(properties);
+        SqlUtils.executeSqlScriptFile(dataSource, "task7/init_schema.sql");
         CoursesGenerator coursesGenerator = new CoursesGenerator(courseDao);
-        coursesGenerator.generateCourses(connection);
+        coursesGenerator.generateCourses(dataSource.getConnection());
     }
 
     @AfterAll
-    static void end() throws SQLException, IOException {
-        SqlUtils.executeSqlScriptFile("task7/drop_schema.sql");
+    static void end() {
+        dataSource.close();
     }
 
     @Test
     void should_CreateCourse() throws SQLException {
-        Course course = new Course("TestCourse", "Description");
-        courseDao.create(connection, course);
-        Optional<Course> actualResult = courseDao.findByCourseName(connection, "TestCourse");
-        Assertions.assertEquals(course.getCourseName(), actualResult.get().getCourseName());
+        Course expectedCourse = new Course(11, "TestCourse", "Description");
+        Course actualCourse = courseDao.create(dataSource.getConnection(), expectedCourse);
+        Assertions.assertEquals(expectedCourse, actualCourse);
     }
 
     @Test
     void should_UpdateCourse() throws SQLException {
-        Course course = courseDao.getAll(connection).get(0);
+        Course course = courseDao.getAll(dataSource.getConnection()).get(0);
         course.setCourseName("TestUpdateCourse");
         course.setCourseDescription("Test");
-        courseDao.update(connection, course);
-        Assertions.assertEquals(course, courseDao.findById(connection, course.getCourseId()).get());
+        Course actualCourse = courseDao.update(dataSource.getConnection(), course);
+        Assertions.assertEquals(course, actualCourse);
     }
 
     @Test
     void should_DeleteCourse() throws SQLException {
-        courseDao.deleteById(connection, 2);
-        Assertions.assertTrue(courseDao.findById(connection, 2).isEmpty());
+        courseDao.deleteById(dataSource.getConnection(), 2L);
+        Assertions.assertTrue(courseDao.findById(dataSource.getConnection(), 2L).isEmpty());
     }
 
     @Test
     void should_ReturnCourseByName() throws SQLException {
-        Course history = courseDao.findByCourseName(connection, "Social").get();
+        Course history = courseDao.findByCourseName(dataSource.getConnection(), "Social").get();
         Assertions.assertEquals("Social", history.getCourseName());
     }
 }

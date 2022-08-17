@@ -15,9 +15,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 import static com.foxminded.vitaliifedan.task7.utils.TransactionUtils.transaction;
 
@@ -25,48 +25,53 @@ class StudentDaoImplTest {
 
     private static StudentDao studentDao;
     private static GroupDao groupDao;
-    private static Connection connection;
     private static final int STUDENT_COUNT = 100;
+    private static DataSource dataSource;
 
     @BeforeAll
     static void setup() throws SQLException, IOException {
+        Properties properties = new Properties();
+        properties.setProperty(DataSource.DRIVER_CLASS_NAME, "org.h2.Driver");
+        properties.setProperty(DataSource.JDBC_URL, "jdbc:h2:mem:db1;MODE=PostgreSQL");
+        properties.setProperty(DataSource.USERNAME, "sa");
+        properties.setProperty(DataSource.PASSWORD, "");
+        dataSource = new DataSource(properties);
         studentDao = new StudentDaoImpl();
         groupDao = new GroupDaoImpl();
-        connection = DataSource.getConnection();
-        SqlUtils.executeSqlScriptFile("task7/init_schema.sql");
-        transaction(connection -> new GroupsGenerator(groupDao).generateGroups(connection, 10));
-        transaction(connection -> new StudentsGenerator(studentDao, groupDao).generateStudents(connection, STUDENT_COUNT));
+        SqlUtils.executeSqlScriptFile(dataSource, "task7/init_schema.sql");
+        transaction(dataSource, connection -> new GroupsGenerator(groupDao).generateGroups(connection, 10));
+        transaction(dataSource, connection -> new StudentsGenerator(studentDao, groupDao).generateStudents(connection, STUDENT_COUNT));
     }
 
     @AfterAll
-    static void end() throws SQLException, IOException {
-        SqlUtils.executeSqlScriptFile("task7/drop_schema.sql");
+    static void end() {
+        dataSource.close();
     }
 
     @Test
     void should_getAllStudents() throws SQLException {
-        List<Student> all = studentDao.getAll(connection);
+        List<Student> all = studentDao.getAll(dataSource.getConnection());
         Assertions.assertEquals(STUDENT_COUNT, all.size());
     }
 
     @Test
     void should_CreateStudent() throws SQLException {
-        Student student = new Student(STUDENT_COUNT + 1, 3, "TestName", "TestLastName");
-        studentDao.create(connection, student);
-        Assertions.assertEquals(student, studentDao.findById(connection, STUDENT_COUNT + 1).get());
+        Student expectedStudent = new Student(STUDENT_COUNT + 1, 3, "TestName", "TestLastName");
+        Student actualStudent = studentDao.create(dataSource.getConnection(), expectedStudent);
+        Assertions.assertEquals(expectedStudent, actualStudent);
     }
 
     @Test
     void should_UpdateStudent() throws SQLException {
         Student student = new Student(99, 3, "Update", "LastName");
-        studentDao.update(connection, student);
-        Assertions.assertEquals(student, studentDao.findById(connection, 99).get());
+        Student updatedStudent = studentDao.update(dataSource.getConnection(), student);
+        Assertions.assertEquals(student, updatedStudent);
     }
 
     @Test
     void should_deleteStudent() throws SQLException {
-        studentDao.deleteById(connection, 70);
-        Assertions.assertTrue(studentDao.findById(connection, 70).isEmpty());
+        studentDao.deleteById(dataSource.getConnection(), 70L);
+        Assertions.assertTrue(studentDao.findById(dataSource.getConnection(), 70L).isEmpty());
     }
 
 }
