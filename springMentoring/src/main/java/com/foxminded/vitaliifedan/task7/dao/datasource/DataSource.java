@@ -24,6 +24,7 @@ public class DataSource implements AutoCloseable {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.setMaximumPoolSize(20);
         ds = new HikariDataSource(config);
     }
 
