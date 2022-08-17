@@ -3,40 +3,36 @@ package com.foxminded.vitaliifedan.task7.dao.datasource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
-import java.net.URISyntaxException;
-import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
-public class DataSource {
+public class DataSource implements AutoCloseable {
 
-    private static final HikariConfig config;
+    public static final String DRIVER_CLASS_NAME = "dataSource.driver";
+    public static final String JDBC_URL = "dataSource.jdbcUrl";
+    public static final String USERNAME = "dataSource.username";
+    public static final String PASSWORD = "dataSource.password";
+    private final HikariDataSource ds;
 
-    static {
-        try {
-            config = new HikariConfig(
-                    Path.of(DataSource.class.getClassLoader().getResource("task7/database.properties").toURI()).toString()
-            );
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static final HikariDataSource ds;
-
-    static {
+    public DataSource(Properties properties) {
+        HikariConfig config = new HikariConfig();
+        config.setDriverClassName(properties.getProperty(DRIVER_CLASS_NAME));
+        config.setJdbcUrl(properties.getProperty(JDBC_URL));
+        config.setUsername(properties.getProperty(USERNAME));
+        config.setPassword(properties.getProperty(PASSWORD));
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-//        config.setAutoCommit(false);
         ds = new HikariDataSource(config);
     }
 
-    private DataSource() {
-    }
-
-    public static Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return ds.getConnection();
     }
 
+    @Override
+    public void close() {
+        ds.close();
+    }
 }
