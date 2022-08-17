@@ -8,11 +8,9 @@ import com.foxminded.vitaliifedan.task7.dao.implementations.StudentDaoImpl;
 import com.foxminded.vitaliifedan.task7.misc.GroupsGenerator;
 import com.foxminded.vitaliifedan.task7.misc.StudentsGenerator;
 import com.foxminded.vitaliifedan.task7.models.Student;
+import com.foxminded.vitaliifedan.task7.utils.ResourcesUtils;
 import com.foxminded.vitaliifedan.task7.utils.SqlUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -29,18 +27,20 @@ class StudentDaoImplTest {
     private static DataSource dataSource;
 
     @BeforeAll
-    static void setup() throws SQLException, IOException {
-        Properties properties = new Properties();
-        properties.setProperty(DataSource.DRIVER_CLASS_NAME, "org.h2.Driver");
-        properties.setProperty(DataSource.JDBC_URL, "jdbc:h2:mem:db1;MODE=PostgreSQL");
-        properties.setProperty(DataSource.USERNAME, "sa");
-        properties.setProperty(DataSource.PASSWORD, "");
+    static void setup() throws IOException {
+        Properties properties = ResourcesUtils.loadPropertiesFromResources("task7/database_test.properties");
         dataSource = new DataSource(properties);
         studentDao = new StudentDaoImpl();
         groupDao = new GroupDaoImpl();
+    }
+
+    @BeforeEach
+    void initEach() throws SQLException, IOException {
         SqlUtils.executeSqlScriptFile(dataSource, "task7/init_schema.sql");
-        transaction(dataSource, connection -> new GroupsGenerator(groupDao).generateGroups(connection, 10));
-        transaction(dataSource, connection -> new StudentsGenerator(studentDao, groupDao).generateStudents(connection, STUDENT_COUNT));
+        transaction(dataSource, connection -> {
+            new GroupsGenerator(groupDao).generateGroups(connection, 10);
+            new StudentsGenerator(studentDao, groupDao).generateStudents(connection, STUDENT_COUNT);
+        });
     }
 
     @AfterAll
@@ -56,9 +56,9 @@ class StudentDaoImplTest {
 
     @Test
     void should_CreateStudent() throws SQLException {
-        Student expectedStudent = new Student(STUDENT_COUNT + 1, 3, "TestName", "TestLastName");
-        Student actualStudent = studentDao.create(dataSource.getConnection(), expectedStudent);
-        Assertions.assertEquals(expectedStudent, actualStudent);
+        Student testStudent = new Student(3, "TestName", "TestLastName");
+        Student actualStudent = studentDao.create(dataSource.getConnection(), testStudent);
+        Assertions.assertNotNull(actualStudent);
     }
 
     @Test
